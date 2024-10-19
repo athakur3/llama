@@ -1,127 +1,182 @@
 package com.example.dreamagent
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.dreamagent.ui.theme.DreamAgentTheme
-import io.socket.client.IO
-import io.socket.client.Socket
-import io.socket.emitter.Emitter
-import org.json.JSONException
-import org.json.JSONObject
+import java.io.File
+import java.io.IOException
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var mSocket: Socket
+    private val RECORD_AUDIO_REQUEST_CODE = 123
+    private var mediaRecorder: MediaRecorder? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private var isRecording = false
+    private var isPlaying = false
+    private lateinit var audioFile: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize Socket.IO connection
-        try {
-            // Use your machine's local IP address for real devices or 10.0.2.2 for emulator
-            mSocket = IO.socket("http://10.0.2.2:8080")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        // Listen for new messages
-        mSocket.on("new message", onNewMessage)
-        mSocket.connect()
+        SocketManager.getSocket()
 
         setContent {
             DreamAgentTheme {
-                MessageInputScreen(
-                    onSendMessage = { message ->
-                        attemptSend(message)
-                    }
+                AudioRecordScreen(
+                    onRecordAudio = { toggleRecording() },
+                    onPlayAudio = { togglePlayback() },
+                    isRecording = isRecording,
+                    isPlaying = isPlaying
                 )
             }
         }
     }
 
-    // Function to send a message to the server
-    private fun attemptSend(message: String) {
-        if (message.isNotEmpty()) {
-            mSocket.emit("new message", message)
-            Log.d("SocketIO", "Message sent: $message")
-        } else {
-            Log.d("SocketIO", "Message is empty, not sent.")
-        }
-    }
-
-    // Listener for incoming 'new message' events
-    private val onNewMessage = Emitter.Listener { args ->
-        runOnUiThread {
-            try {
-                val data = args[0] as JSONObject
-                val username = data.getString("username")
-                val message = data.getString("message")
-                // Log the message or update the UI
-                Log.d("SocketIO", "$username: $message")
-            } catch (e: JSONException) {
-                Log.e("SocketIO", "Error parsing JSON: ${e.message}")
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        SocketManager.reconnect()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Properly disconnect the socket and remove the listener
-        mSocket.disconnect()
-        mSocket.off("new message", onNewMessage)
+        SocketManager.disconnect()
+        releaseMediaRecorder()
+        releaseMediaPlayer()
+    }
+
+    private fun toggleRecording() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_REQUEST_CODE)
+        } else {
+            if (!isRecording) startRecording() else stopRecording()
+        }
+    }
+
+    private fun startRecording() {
+        println("REC")
+        try {
+            releaseMediaRecorder()
+            audioFile = File(externalCacheDir?.absolutePath, "audio_record.mp4") // Using MPEG_4
+            mediaRecorder = MediaRecorder().apply {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4) // MPEG_4 format
+                setOutputFile(audioFile.absolutePath)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC) // AAC encoding
+                setAudioChannels(1)
+                setAudioSamplingRate(44100)
+                prepare()
+                start()
+            }
+            isRecording = true
+        } catch (e: IOException) {
+            Log.e("MainActivity", "prepare() failed")
+        }
+    }
+
+    private fun stopRecording() {
+        println("STOP REC")
+        mediaRecorder?.apply {
+            stop()
+            release()
+        }
+        mediaRecorder = null
+        isRecording = false
+
+        val base64Audio = convertAudioToBase64(audioFile)
+        SocketManager.getSocket().emit("audio_data", audioFile.absolutePath)
+        Log.d("SocketIO", "Emitted 'audio_ready' event with file path: ${audioFile.absolutePath}")
+    }
+
+    private fun togglePlayback() {
+        if (!isPlaying) startPlaying() else stopPlaying()
+    }
+
+    private fun startPlaying() {
+
+        println("START PLAY")
+        try {
+            releaseMediaPlayer()
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(audioFile.absolutePath)
+                print(audioFile.absolutePath)
+                prepare()
+                start()
+            }
+            isPlaying = true
+            mediaPlayer?.setOnCompletionListener {
+                stopPlaying()
+            }
+        } catch (e: IOException) {
+            Log.e("MainActivity", "prepare() failed")
+        }
+    }
+
+    private fun stopPlaying() {
+        println("STOP PLAY")
+        mediaPlayer?.release()
+        mediaPlayer = null
+        isPlaying = false
+    }
+
+    private fun releaseMediaRecorder() {
+        mediaRecorder?.apply {
+            stop()
+            release()
+        }
+        mediaRecorder = null
+        isRecording = false
+    }
+
+    private fun releaseMediaPlayer() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+        isPlaying = false
+    }
+
+    private fun convertAudioToBase64(file: File): String {
+        val bytes = file.readBytes()
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessageInputScreen(onSendMessage: (String) -> Unit) {
-    var message by remember { mutableStateOf("") }
-
+fun AudioRecordScreen(
+    onRecordAudio: () -> Unit,
+    onPlayAudio: () -> Unit,
+    isRecording: Boolean,
+    isPlaying: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Text input for typing the message
-        TextField(
-            value = message,
-            onValueChange = { message = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Type a message") }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Send button
-        Button(
-            onClick = {
-                if (message.isNotEmpty()) {
-                    onSendMessage(message)
-                    message = "" // Clear the input field after sending
-                } else {
-                    Log.d("SocketIO", "Message is empty, cannot send.")
-                }
-            },
-
-        ) {
-            Text(text = "Send")
+        Button(onClick = onRecordAudio) {
+            Text(text = if (isRecording) "Stop Recording" else "Start Recording")
         }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun MessageInputScreenPreview() {
-    DreamAgentTheme {
-        MessageInputScreen(onSendMessage = {})
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = onPlayAudio, enabled = !isRecording) {
+            Text(text = if (isPlaying) "Stop Playing" else "Start Playing")
+        }
     }
 }
