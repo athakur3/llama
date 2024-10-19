@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DreamAgent</string>
+    <string name="accessibility_service_description">Description of your accessibility service</string>
+</resources>
