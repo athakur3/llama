@@ -188,3 +188,61 @@ INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
 INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
 INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
 INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Sending packet PING data None
+INFO:engineio.server:EyC7Bo96x7e5VSPpAAAC: Received packet PONG data 
+INFO:engineio.server:service task canceled
+INFO:engineio.server:Server initialized for aiohttp.
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet OPEN data {'sid': 'v_a1S9QBfBebDI0bAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000}
+INFO:aiohttp.access:127.0.0.1 [19/Oct/2024:21:56:59 +0530] "GET /socket.io/?EIO=4&transport=polling HTTP/1.1" 200 290 "-" "okhttp/3.14.9"
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Received packet MESSAGE data 0
+INFO:root:Client E3ThwRWWTO-9xeOzAAAB connected.
+INFO:socketio.server:emitting event "welcome" to E3ThwRWWTO-9xeOzAAAB [/]
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet MESSAGE data 2["welcome",{"message":"Welcome to the server!"}]
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet MESSAGE data 0{"sid":"E3ThwRWWTO-9xeOzAAAB"}
+INFO:aiohttp.access:127.0.0.1 [19/Oct/2024:21:56:59 +0530] "POST /socket.io/?EIO=4&transport=polling&sid=v_a1S9QBfBebDI0bAAAA HTTP/1.1" 200 179 "-" "okhttp/3.14.9"
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Received request to upgrade to websocket
+INFO:aiohttp.access:127.0.0.1 [19/Oct/2024:21:56:59 +0530] "GET /socket.io/?EIO=4&transport=polling&sid=v_a1S9QBfBebDI0bAAAA HTTP/1.1" 200 276 "-" "okhttp/3.14.9"
+INFO:aiohttp.access:127.0.0.1 [19/Oct/2024:21:56:59 +0530] "GET /socket.io/?EIO=4&transport=polling&sid=v_a1S9QBfBebDI0bAAAA HTTP/1.1" 200 193 "-" "okhttp/3.14.9"
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Upgrade to websocket successful
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet PING data None
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Received packet PONG data 
