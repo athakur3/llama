@@ -246,3 +246,8 @@ INFO:aiohttp.access:127.0.0.1 [19/Oct/2024:21:56:59 +0530] "GET /socket.io/?EIO=
 INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Upgrade to websocket successful
 INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet PING data None
 INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Received packet PONG data 
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet PING data None
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Received packet PONG data 
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Sending packet PING data None
+INFO:engineio.server:v_a1S9QBfBebDI0bAAAA: Received packet PONG data 
+INFO:engineio.server:service task canceled
